@@ -2,6 +2,12 @@
 
 A comprehensive Django web application for tracking fitness workouts, exercises, and progress with a focus on security, data integrity, and user experience.
 
+## 🌐 Live Demo
+
+**[django-fitness-tracker.vercel.app](https://ibtisam-fitness-tracker.vercel.app)**
+
+> Guest access available — click "Continue as Guest" on the login page.
+
 ## 📋 Project Overview
 
 This is a full-stack fitness tracking application built with Django 6.0 and MySQL, demonstrating:
@@ -44,10 +50,10 @@ This is a full-stack fitness tracking application built with Django 6.0 and MySQ
 
 ## 🛠️ Technology Stack
 
-- **Backend:** Django 6.0, Python 3.13
-- **Database:** MySQL 8.0 (local) / PostgreSQL (production)
-- **Frontend:** Bootstrap 5, Font Awesome, Custom CSS
-- **Deployment:** Render (with Gunicorn & WhiteNoise)
+- **Backend:** Django 6.0, Python 3.12
+- **Database:** PostgreSQL (Neon) / SQLite (local development)
+- **Frontend:** Bootstrap 5, Font Awesome, Custom CSS (dark theme)
+- **Deployment:** Vercel (with Gunicorn & WhiteNoise)
 - **Security:** CSRF protection, XSS prevention, ORM-based queries
 
 ## 🔒 Security Implementation
@@ -151,7 +157,7 @@ FitnessApp/
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/ibtisamchughtai02-spec/Django-Fitness-App.git
+git clone https://github.com/ibtisamchughtai/Django-Fitness-App.git
 cd Django-Fitness-App
 ```
 
@@ -167,66 +173,41 @@ source .venv/bin/activate  # Mac/Linux
 pip install -r requirements.txt
 ```
 
-4. **Setup MySQL database**
-- Create database: `fitness_tracker_db`
-- Update credentials in `settings.py`
-
-5. **Run migrations**
+4. **Run migrations**
 ```bash
 python manage.py migrate
 ```
 
-6. **Create superuser**
+5. **Create superuser**
 ```bash
 python manage.py createsuperuser
 ```
 
-7. **Collect static files**
-```bash
-python manage.py collectstatic
-```
-
-8. **Run development server**
+6. **Run development server**
 ```bash
 python manage.py runserver
 ```
 
 Visit: `http://127.0.0.1:8000`
 
-## 🌐 Deployment (Render)
+## 🌐 Deployment (Vercel)
 
-### Prerequisites
-- GitHub repository
-- Render account
-- PostgreSQL database on Render
+### Stack
+- **Platform:** Vercel (serverless)
+- **Database:** Neon PostgreSQL (free tier)
+- **Static Files:** Committed to repository, served via WhiteNoise
 
-### Deployment Steps
-
-1. **Push to GitHub**
-```bash
-git add .
-git commit -m "Deploy to Render"
-git push origin main
+### Environment Variables (Vercel Dashboard)
 ```
-
-2. **Create Web Service on Render**
-- Connect GitHub repository
-- Build Command: `./build.sh`
-- Start Command: (auto-detected from Procfile)
-
-3. **Add PostgreSQL Database**
-- Create PostgreSQL database on Render
-- Copy `DATABASE_URL` to environment variables
-
-4. **Configure Environment Variables**
-```
-DATABASE_URL=<your-postgres-url>
-DJANGO_SECRET_KEY=<your-secret-key>
+SECRET_KEY=<your-secret-key>
 DEBUG=False
+DATABASE_URL=<neon-postgres-url>
 ```
 
-5. **Deploy!**
-- Render will automatically build and deploy
+### Run Migrations Against Production DB
+```powershell
+$env:DATABASE_URL="your-postgres-url"; python manage.py migrate
+```
 
 ## 📝 API Endpoints
 

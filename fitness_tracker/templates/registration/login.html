@@ -2,6 +2,18 @@
 
 {% block title %}Login - Fitness Tracker{% endblock %}
 
+{% block preloader %}
+<!-- Preloader -->
+<div id="preloader">
+    <div class="preloader-content">
+        <div class="dumbbell-loader">
+            <i class="fas fa-dumbbell"></i>
+        </div>
+        <div class="loading-text">Loading Fitness Tracker...</div>
+    </div>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6 col-lg-5">
@@ -38,6 +50,12 @@
                 
                 <hr>
                 
+                <div class="d-grid mb-3">
+                    <a href="{% url 'guest_login' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-user-secret"></i> Continue as Guest
+                    </a>
+                </div>
+                
                 <div class="text-center">
                     <p class="mb-0">Don't have an account? 
                         <a href="{% url 'register' %}" class="text-decoration-none">
@@ -47,24 +65,21 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Demo Information -->
-        <div class="card mt-4">
-            <div class="card-header">
-                <h6><i class="fas fa-info-circle"></i> Demo Information</h6>
-            </div>
-            <div class="card-body">
-                <small class="text-muted">
-                    <strong>Security Features:</strong>
-                    <ul class="mb-0">
-                        <li>CSRF protection enabled</li>
-                        <li>Password validation with Django validators</li>
-                        <li>Session-based authentication</li>
-                        <li>Secure form handling</li>
-                    </ul>
-                </small>
-            </div>
-        </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Preloader functionality for login page
+    window.addEventListener('load', function() {
+        const preloader = document.getElementById('preloader');
+        setTimeout(function() {
+            preloader.classList.add('fade-out');
+            setTimeout(function() {
+                preloader.style.display = 'none';
+            }, 400);
+        }, 2000);
+    });
+</script>
 {% endblock %}

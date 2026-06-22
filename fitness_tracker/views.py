@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q, Count, Sum, Avg, Max, F
@@ -66,6 +67,41 @@ def user_login(request):
             messages.error(request, 'Invalid username or password.')
     
     return render(request, 'registration/login.html')
+
+
+def guest_login(request):
+    """Guest login view - creates or uses existing guest account"""
+    # Get or create guest user
+    guest_username = 'guest_user'
+    guest_email = 'guest@fitnessapp.com'
+    
+    try:
+        guest_user = User.objects.get(username=guest_username)
+    except User.DoesNotExist:
+        # Create guest user with a default password
+        guest_user = User.objects.create_user(
+            username=guest_username,
+            email=guest_email,
+            password='guest123'
+        )
+        # Create profile for guest user (will be created by signal, just ensure it exists)
+        if not hasattr(guest_user, 'profile'):
+            UserProfile.objects.create(
+                user=guest_user,
+                age=25,
+                weight=70,
+                height=170,
+                activity_level='moderate',
+                fitness_goal='maintain'
+            )
+    
+    # Set backend attribute for login
+    guest_user.backend = 'django.contrib.auth.backends.ModelBackend'
+    
+    # Log in the guest user
+    login(request, guest_user)
+    messages.info(request, 'You are now browsing as a guest. Your data will be temporary.')
+    return redirect('dashboard')
 
 
 @login_required

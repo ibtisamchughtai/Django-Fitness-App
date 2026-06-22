@@ -6,6 +6,7 @@ urlpatterns = [
     # Authentication URLs
     path('register/', views.register, name='register'),
     path('login/', views.user_login, name='login'),
+    path('guest-login/', views.guest_login, name='guest_login'),
     path('logout/', views.user_logout, name='logout'),
     
     # Dashboard and Profile URLs

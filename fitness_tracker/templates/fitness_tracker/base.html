@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Fitness Tracker{% endblock %}</title>
     
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -16,125 +21,111 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'dashboard' %}">
-                <i class="fas fa-dumbbell"></i> Fitness Tracker
-            </a>
+    {% block preloader %}{% endblock %}
+
+    <!-- Global Header -->
+    <header class="global-header">
+        <div class="header-container">
+            <!-- Brand Area -->
+            <div class="brand-area">
+                <a href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'login' %}{% endif %}" class="brand-link">
+                    <i class="fas fa-dumbbell brand-icon"></i>
+                    <span class="brand-text">FITNESS TRACKER</span>
+                </a>
+            </div>
             
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+            <!-- Mobile Toggle -->
+            <button class="mobile-nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
             </button>
             
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'dashboard' %}">
-                                <i class="fas fa-tachometer-alt"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'workout_list' %}">
-                                <i class="fas fa-list"></i> Workouts
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'workout_create' %}">
-                                <i class="fas fa-plus"></i> New Workout
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'quick_workout' %}">
-                                <i class="fas fa-bolt"></i> Quick Log
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'progress' %}">
-                                <i class="fas fa-chart-line"></i> Progress
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-                
-                <ul class="navbar-nav">
-                    {% if user.is_authenticated %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user"></i> {{ user.username }}
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{% url 'profile' %}">
-                                    <i class="fas fa-user-cog"></i> Profile
-                                </a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'logout' %}">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
-                                </a></li>
-                            </ul>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">
-                                <i class="fas fa-sign-in-alt"></i> Login
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'register' %}">
-                                <i class="fas fa-user-plus"></i> Register
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
+            <!-- Navigation Area -->
+            <nav class="nav-area" id="navArea">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="nav-link" title="Dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="{% url 'workout_list' %}" class="nav-link" title="Workouts">
+                        <i class="fas fa-list"></i>
+                        <span>Workouts</span>
+                    </a>
+                    <a href="{% url 'progress' %}" class="nav-link" title="Progress">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Progress</span>
+                    </a>
+                    <a href="{% url 'profile' %}" class="nav-link" title="Profile">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                    <a href="{% url 'logout' %}" class="nav-link logout-link" title="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="nav-link" title="Login">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Login</span>
+                    </a>
+                    <a href="{% url 'register' %}" class="nav-link" title="Register">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Register</span>
+                    </a>
+                {% endif %}
+            </nav>
         </div>
-    </nav>
+    </header>
 
     <!-- Messages -->
     {% if messages %}
-        <div class="container mt-3">
+        <div class="messages-container">
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {% if message.tags == 'error' %}
-                        <i class="fas fa-exclamation-triangle"></i>
-                    {% elif message.tags == 'success' %}
-                        <i class="fas fa-check-circle"></i>
-                    {% elif message.tags == 'warning' %}
-                        <i class="fas fa-exclamation-circle"></i>
-                    {% else %}
-                        <i class="fas fa-info-circle"></i>
-                    {% endif %}
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <div class="alert-message alert-{{ message.tags }}" role="alert">
+                    <i class="fas {% if message.tags == 'error' %}fa-exclamation-triangle{% elif message.tags == 'success' %}fa-check-circle{% elif message.tags == 'warning' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"></i>
+                    <span>{{ message }}</span>
+                    <button type="button" class="alert-close" onclick="this.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
             {% endfor %}
         </div>
     {% endif %}
 
-    <!-- Main Content -->
-    <main class="container mt-4 mb-5">
-        {% block content %}
-        {% endblock %}
+    <!-- Main Content Window -->
+    <main class="main-content-window">
+        <div class="content-container">
+            {% block content %}
+            {% endblock %}
+        </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-light text-center py-3 mt-5">
-        <div class="container">
+    <!-- Global Footer -->
+    <footer class="global-footer">
+        <div class="footer-content">
             <p>&copy; 2024 Fitness Tracker. Built with Django MVT Architecture.</p>
-            <small class="text-muted">
-                Secure CRUD Operations | CSRF Protected | XSS Prevention
-            </small>
         </div>
     </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     
-    {% block extra_js %}{% endblock %}
-
-    <!-- CSRF Token for AJAX requests -->
     <script>
+        // Mobile navigation toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const navToggle = document.getElementById('navToggle');
+            const navArea = document.getElementById('navArea');
+            
+            if (navToggle) {
+                navToggle.addEventListener('click', function() {
+                    navToggle.classList.toggle('active');
+                    navArea.classList.toggle('active');
+                });
+            }
+        });
+
+        // CSRF Token for AJAX requests
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -151,5 +142,7 @@
         }
         const csrftoken = getCookie('csrftoken');
     </script>
+    
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

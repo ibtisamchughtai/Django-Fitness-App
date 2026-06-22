@@ -25,9 +25,9 @@ import os
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-local-dev-key-only')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['.vercel.app', '.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -78,26 +78,18 @@ WSGI_APPLICATION = 'fitness_project.wsgi.application'
 import os
 
 # Database configuration
-# Uses environment variables for production, MySQL for local development
+# Uses environment variables for production, SQLite for local development
 if os.environ.get('DATABASE_URL'):
     # PostgreSQL on Render (if you add PostgreSQL database)
     DATABASES = {
         'default': dj_database_url.config(default='sqlite:///db.sqlite3')
     }
 else:
-    # MySQL configuration (local or cloud hosted)
+    # SQLite configuration (local development)
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ.get('MYSQL_DB', 'fitness_tracker_db'),
-            'USER': os.environ.get('MYSQL_USER', 'root'),
-            'PASSWORD': os.environ.get('MYSQL_PASSWORD', ''),  # Set in environment variables
-            'HOST': os.environ.get('MYSQL_HOST', 'localhost'),
-            'PORT': os.environ.get('MYSQL_PORT', '3306'),
-            'OPTIONS': {
-                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-                'charset': 'utf8mb4',
-            },
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
 
@@ -149,6 +141,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Additional locations of static files
+STATICFILES_DIRS = [
+    BASE_DIR / 'fitness_tracker' / 'static',
+]
 
 # WhiteNoise static files storage
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

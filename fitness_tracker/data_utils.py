@@ -342,6 +342,7 @@ def export_csv_data(workouts):
     
     # Write data
     for workout in workouts:
+        
         exercises = workout.exercises.all()
         if exercises:
             for exercise in exercises:

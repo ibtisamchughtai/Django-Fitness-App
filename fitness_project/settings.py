@@ -81,12 +81,16 @@ import os
 # Database configuration
 # Uses environment variables for production, SQLite for local development
 if os.environ.get('DATABASE_URL'):
-    # PostgreSQL on Render (if you add PostgreSQL database)
+    # PostgreSQL on Vercel/Render
     DATABASES = {
-        'default': dj_database_url.config(default='sqlite:///db.sqlite3')
+        'default': dj_database_url.config(
+            default='sqlite:///db.sqlite3',
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
 else:
-    # SQLite configuration (local development)
+    # SQLite configuration (local development and Vercel build)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

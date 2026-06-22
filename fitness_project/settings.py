@@ -77,16 +77,16 @@ WSGI_APPLICATION = 'fitness_project.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 import os
+import sys
 
 # Database configuration
-# Uses environment variables for production, SQLite for local development
-if os.environ.get('DATABASE_URL'):
-    # PostgreSQL on Vercel/Render
+# Force SQLite during collectstatic (build time) to avoid psycopg loading
+if os.environ.get('DATABASE_URL') and 'collectstatic' not in sys.argv:
+    # PostgreSQL on Vercel/Render (runtime only)
     DATABASES = {
         'default': dj_database_url.config(
             default='sqlite:///db.sqlite3',
             conn_max_age=600,
-            conn_health_checks=True,
         )
     }
 else:

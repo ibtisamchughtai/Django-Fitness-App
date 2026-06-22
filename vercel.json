@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "echo 'Static files already committed - skipping collectstatic'",
   "routes": [
     {
       "src": "/static/(.*)",
